@@ -4,7 +4,9 @@
       <slot>
       </slot>
     </div>
-    <div class="dots"></div>
+    <div class="dots">
+      <span class="dot" :class="{active: currentPageIndex === index}" v-for="(item, index) in dots"></span>
+    </div>
   </div>
 </template>
 
@@ -27,16 +29,21 @@
         default: 4000
       }
     },
+    data() {
+      return {
+        dots: [],
+        currentPageIndex: 0
+      }
+    },
     mounted() {
       setTimeout(() => {
-        console.log('mounted')
         this._setSliderWidth()
+        this._initDots()
         this._initSlider()
       }, 20)
     },
     methods: {
       _setSliderWidth() {
-        console.log('_setSliderWidth')
         this.children = this.$refs.sliderGroup.children
         let width = 0
         let sliderWidth = this.$refs.slider.clientWidth
@@ -46,14 +53,12 @@
           child.style.width = sliderWidth + 'px'
           width += sliderWidth
         }
-        console.log(this.loop)
         if (this.loop) {
           width += 2 * sliderWidth
         }
         this.$refs.sliderGroup.style.width = width + 'px'
       },
       _initSlider() {
-        console.log('_initSlider')
         this.slider = new BScroll(this.$refs.slider, {
           scrollX: true,
           scrollY: false,
@@ -63,6 +68,16 @@
           snapThreshold: 0.3,
           snapSpeed: 400
         })
+        this.slider.on('scrollEnd', () => {
+          let pageIndex = this.slider.getCurrentPage().pageX
+          if (this.loop) {
+            pageIndex -= 1
+          }
+          this.currentPageIndex = pageIndex
+        })
+      },
+      _initDots() {
+        this.dots = new Array(this.children.length)
       }
     }
   }
@@ -90,4 +105,23 @@
         img
           display block
           width 100%
+
+    .dots
+      position absolute
+      right 0
+      left 0
+      bottom 12px
+      text-align center
+      font-size 0
+      .dot
+        display inline-block
+        margin 0 4px
+        width 8px
+        height 8px
+        border-radius 50%
+        background $color-text-l
+        &.active
+          width 20px
+          border-radius 5px
+          background $color-text-ll
 </style>
