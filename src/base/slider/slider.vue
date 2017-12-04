@@ -40,6 +40,10 @@
         this._setSliderWidth()
         this._initDots()
         this._initSlider()
+
+        if (this.autoPlay) {
+          this._play()
+        }
       }, 20)
     },
     methods: {
@@ -73,11 +77,30 @@
           if (this.loop) {
             pageIndex -= 1
           }
+          // currentPageIndex start from 0, pageIndex start from 1
           this.currentPageIndex = pageIndex
+
+          if (this.autoPlay) {
+            this._play()
+          }
+        })
+        this.slider.on('beforeScrollStart', () => {
+          if (this.autoPlay) {
+            clearTimeout(this.timer)
+          }
         })
       },
       _initDots() {
         this.dots = new Array(this.children.length)
+      },
+      _play() {
+        let pageIndex = this.currentPageIndex + 1
+        if (this.loop) {
+          pageIndex += 1
+        }
+        this.timer = setTimeout(() => {
+          this.slider.goToPage(pageIndex, 0, 400)
+        }, this.interval)
       }
     }
   }
