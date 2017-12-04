@@ -46,6 +46,17 @@
         }
       }, 20)
     },
+    activated() {
+      if (this.autoPlay) {
+        this._play()
+      }
+    },
+    deactivated() {
+      clearTimeout(this.timer)
+    },
+    beforeDestory() {
+      clearTimeout(this.timer)
+    },
     methods: {
       _setSliderWidth() {
         this.children = this.$refs.sliderGroup.children
