@@ -15,6 +15,7 @@
   import {addClass} from 'common/js/dom'
 
   export default {
+    name: 'slider',
     props: {
       loop: {
         type: Boolean,
@@ -45,6 +46,14 @@
           this._play()
         }
       }, 20)
+
+      window.addEventListener('resize', () => {
+        if (!this.slider) {
+          return
+        }
+        this._setSliderWidth(true)
+        this.slider.refresh()
+      })
     },
     activated() {
       if (this.autoPlay) {
@@ -54,11 +63,11 @@
     deactivated() {
       clearTimeout(this.timer)
     },
-    beforeDestory() {
+    beforeDestroy() {
       clearTimeout(this.timer)
     },
     methods: {
-      _setSliderWidth() {
+      _setSliderWidth(isResize) {
         this.children = this.$refs.sliderGroup.children
         let width = 0
         let sliderWidth = this.$refs.slider.clientWidth
@@ -68,7 +77,7 @@
           child.style.width = sliderWidth + 'px'
           width += sliderWidth
         }
-        if (this.loop) {
+        if (this.loop && !isResize) {
           width += 2 * sliderWidth
         }
         this.$refs.sliderGroup.style.width = width + 'px'
