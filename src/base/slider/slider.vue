@@ -5,6 +5,7 @@
       </slot>
     </div>
     <div class="dots">
+      <!--(item, index) in dots 其中index表示第几个元素-->
       <span class="dot" :class="{active: currentPageIndex === index}" v-for="(item, index) in dots"></span>
     </div>
   </div>
@@ -15,7 +16,7 @@
   import {addClass} from 'common/js/dom'
 
   export default {
-    name: 'slider',
+//    name: 'slider',
     props: {
       loop: {
         type: Boolean,
@@ -55,15 +56,18 @@
         this.slider.refresh()
       })
     },
-    activated() {
-      if (this.autoPlay) {
-        this._play()
-      }
-    },
-    deactivated() {
-      clearTimeout(this.timer)
-    },
-    beforeDestroy() {
+//    activated() {
+//      if (this.autoPlay) {
+//        this._play()
+//      }
+//    },
+//    deactivated() {
+//      clearTimeout(this.timer)
+//    },
+//    beforeDestroy() {
+//      clearTimeout(this.timer)
+//    },
+    destroyed() {
       clearTimeout(this.timer)
     },
     methods: {
@@ -101,14 +105,15 @@
           this.currentPageIndex = pageIndex
 
           if (this.autoPlay) {
+            clearTimeout(this.timer)
             this._play()
           }
         })
-        this.slider.on('beforeScrollStart', () => {
-          if (this.autoPlay) {
-            clearTimeout(this.timer)
-          }
-        })
+//        this.slider.on('beforeScrollStart', () => {
+//          if (this.autoPlay) {
+//            clearTimeout(this.timer)
+//          }
+//        })
       },
       _initDots() {
         this.dots = new Array(this.children.length)
