@@ -41,7 +41,7 @@
         width 100%
         height 100%
         z-index -1
-        opacity 0.6
+        opacity .6
         filter blur(20px)
       .top
         position relative
@@ -94,7 +94,7 @@
               width 100%
               height 100%
               box-sizing border-box
-              border 10px solid rgba(255, 255, 255, 0.1)
+              border 10px solid rgba(255, 255, 255, .1)
               border-radius 50%
               &.play
                 animation rotate 20s linear infinite
@@ -158,7 +158,7 @@
           display flex
           align-items center
           width 80%
-          margin 0px auto
+          margin 0 auto
           padding 10px 0
           .time
             color $color-text
@@ -194,9 +194,9 @@
           .icon-favorite
             color $color-sub-theme
       &.normal-enter-active, &.normal-leave-active
-        transition all 0.4s
+        transition all .4s
         .top, .bottom
-          transition all 0.4s cubic-bezier(0.86, 0.18, 0.82, 1.32)
+          transition all .4s cubic-bezier(.86, .18, .82, 1.32)
       &.normal-enter, &.normal-leave-to
         opacity 0
         .top
@@ -214,7 +214,7 @@
       height 60px
       background $color-highlight-background
       &.mini-enter-active, &.mini-leave-active
-        transition all 0.4s
+        transition all .4s
       &.mini-enter, &.mini-leave-to
         opacity 0
       .icon
