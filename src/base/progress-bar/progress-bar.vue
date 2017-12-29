@@ -48,7 +48,6 @@
       },
       progressClick(e) {
         this._offset(e.offsetX)
-        console.log(e)
         this._triggerPercent()
       },
       _offset(offsetWidth) {
