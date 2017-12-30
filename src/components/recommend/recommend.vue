@@ -40,8 +40,10 @@
   import Scroll from 'base/scroll/scroll'
   import {getRecommend, getDiscList} from 'api/recommend'
   import {ERR_OK} from 'api/config'
+  import {playlistMixin} from 'common/js/mixin'
 
   export default {
+    mixins: [playlistMixin],
     created() {
       this._getRecommend()
       this._getDiscList()
@@ -53,6 +55,11 @@
       }
     },
     methods: {
+      handlePlaylist(playlist) {
+        const bottom = playlist.length > 0 ? '60px' : ''
+        this.$refs.recommend.style.bottom = bottom
+        this.$refs.scroll.refresh()
+      },
       _getRecommend() {
         getRecommend().then((res) => {
           if (ERR_OK === res.code) {

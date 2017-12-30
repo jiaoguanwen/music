@@ -49,6 +49,8 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         }).then((response) => {
           var ret = response.data
           if (typeof ret === 'string') {
+            // 利用node仿后端处理jsonp内容为json
+            // 第二个小括号捕获分组，中括号里面的非小括号，就是内容，要是不非小括号就提前结束了
             var reg = /^\w+\(({[^()]+})\)$/
             var matches = ret.match(reg)
             if (matches) {
