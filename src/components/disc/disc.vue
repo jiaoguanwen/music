@@ -1,53 +1,54 @@
 <template>
   <transition name="slide">
-    <music-list :title="title" :bg-image="bgImage" :songs="songs"></music-list>
-    <!--<div class="singer-detail"></div>-->
+    <music-list :title="title" :bgImage="bgImage" :songs="songs"></music-list>
   </transition>
 </template>
 
 <script type="text/ecmascript-6">
   import MusicList from 'components/music-list/music-list'
-  import {getSingerDetail} from 'api/singer'
+  import {mapGetters} from 'vuex'
+  import {getSongList} from 'api/recommend'
   import {ERR_OK} from 'api/config'
   import {createSong} from 'common/js/song'
-  import {mapGetters} from 'vuex'
 
   export default {
-    computed: {
-      ...mapGetters(['singer']),
-      title() {
-        return this.singer.name
-      },
-      bgImage() {
-        return this.singer.avatar
-      }
-    },
+    name: 'disc',
     data() {
       return {
         songs: []
       }
     },
     created() {
-      this._getDetail()
+      this._getSongList()
+    },
+    computed: {
+      title() {
+        return this.disc.dissname
+      },
+      bgImage() {
+        return this.disc.imgurl
+      },
+      ...mapGetters([
+        'disc'
+      ])
     },
     methods: {
-      _getDetail() {
-        if (!this.singer.id) {
-          this.$router.push('/singer')
+      _getSongList() {
+        // disc是通过state获取的，如果在state中不设置disc的话，那么在这边就拿不到，就是undefined，所以在直接从这个页面刷新的话，会报错
+        if (!this.disc.dissid) {
+          this.$router.push('/recommend')
           return
         }
-        getSingerDetail(this.singer.id).then((res) => {
+        getSongList(this.disc.dissid).then((res) => {
           if (ERR_OK === res.code) {
-            this.songs = this._normalizeSongs(res.data.list)
+            this.songs = this._normalizeSongs(res.cdlist[0].songlist)
+            console.log(this.songs)
           }
         })
       },
       _normalizeSongs(list) {
-        // 定义返回值
         let ret = []
-        list.forEach((item) => {
-          // ES6 取值，将item里面的musicData属性取出来，作为一个新对象
-          let {musicData} = item
+        list.forEach((musicData) => {
           if (musicData.songid && musicData.albummid) {
             ret.push(createSong(musicData))
           }
@@ -62,6 +63,7 @@
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
+
   .slide-enter-active, .slide-leave-active
     transition all .3s
 
