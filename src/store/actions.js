@@ -31,3 +31,45 @@ export const randomPlay = function ({commit}, {list}) {
   commit(types.SET_FULL_SCREEN, true)
   commit(types.SET_PLAYING_STATE, true)
 }
+
+export const insertSong = function ({commit, state}, song) {
+  let playlist = state.playlist.slice()
+  let sequenceList = state.sequenceList.slice()
+  let currentIndex = state.currentIndex
+  // record current song
+  let currentSong = playlist[currentIndex]
+  // find the song in playlist and return its index
+  let fpIndex = findIndex(playlist, song)
+  // insert new song so currentIndex plus 1
+  currentIndex++
+  // insert the song to the currentIndex position
+  playlist.splice(currentIndex, 0, song)
+  // if playlist has included the song
+  if (fpIndex > -1) {
+    // if currentIndex large than position of the song in playlist
+    if (currentIndex > fpIndex) {
+      // remove song old in the playlist
+      playlist.splice(fpIndex, 1)
+      // remove the song bofore currentIndex so the current should be reduce 1
+      currentIndex--
+    } else {
+      // remove song old in the playlist
+      playlist.splice(fpIndex + 1, 1)
+    }
+  }
+  let currentSIndex = findIndex(sequenceList, currentSong) + 1
+  let fsIndex = findIndex(sequenceList, song)
+  sequenceList.splice(currentSIndex, 0, song)
+  if (fsIndex > -1) {
+    if (currentSIndex > fsIndex) {
+      sequenceList.splice(fsIndex, 1)
+    } else {
+      sequenceList.splice(fsIndex + 1, 1)
+    }
+  }
+  commit(types.SET_PLAYLIST, playlist)
+  commit(types.SET_SEQUENCE_LIST, sequenceList)
+  commit(types.SET_CURRENT_INDEX, currentIndex)
+  commit(types.SET_FULL_SCREEN, true)
+  commit(types.SET_PLAYING_STATE, true)
+}

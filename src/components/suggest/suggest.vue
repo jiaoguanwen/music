@@ -1,7 +1,7 @@
 <template>
   <scroll class="suggest" :data="result" @scrollToEnd="searchMore()" :pullup="pullup" ref="suggest">
     <ul class="suggest-list">
-      <li class="suggest-item" v-for="item in result">
+      <li class="suggest-item" v-for="item in result" @click="selectItem(item)">
         <div class="icon">
           <i :class="getIconCls(item)"></i>
         </div>
@@ -11,18 +11,21 @@
       </li>
       <loading v-show="hasMore" title=""></loading>
     </ul>
+    <div class="no-result-wrapper" v-show="!hasMore && !result.length">
+      <no-result title="抱歉，暂无搜索结果"></no-result>
+    </div>
   </scroll>
 </template>
 
 <script type="text/ecmascript-6">
   import Scroll from 'base/scroll/scroll'
   import Loading from 'base/loading/loading'
-  // import NoResult from 'base/no-result/no-result'
+  import NoResult from 'base/no-result/no-result'
   import {search} from 'api/search'
   import {ERR_OK} from 'api/config'
   import {createSong} from 'common/js/song'
-  // import {mapMutations, mapActions} from 'vuex'
-  // import Singer from 'common/js/singer'
+  import {mapMutations, mapActions} from 'vuex'
+  import Singer from 'common/js/singer'
 
   const TYPE_SINGER = 'singer'
   const perpage = 20
@@ -48,6 +51,9 @@
       }
     },
     methods: {
+      refresh() {
+        this.$refs.suggest.refresh()
+      },
       search() {
         this.page = 1
         this.hasMore = true
@@ -71,12 +77,30 @@
           }
         })
       },
-      // 检查方法有问题，最后一页检查不到，歌手不要每次都获取，这两个bug
+      // checkMethod has problem: last page can't be check and singer shouldn't give everytime
       _checkMore(data) {
         const song = data.song
         if (!song.list.length || song.curnum < perpage) {
           this.hasMore = false
         }
+      },
+      listScroll() {
+        this.$emit('listScroll')
+      },
+      selectItem(item) {
+        if (item.type === TYPE_SINGER) {
+          const singer = new Singer({
+            id: item.singermid,
+            name: item.singername
+          })
+          this.$router.push({
+            path: `/search/${singer.id}`
+          })
+          this.setSinger(singer)
+        } else {
+          this.insertSong(item)
+        }
+        this.$emit('select', item)
       },
       getIconCls(item) {
         if (TYPE_SINGER === item.type) {
@@ -110,17 +134,23 @@
           }
         })
         return ret
-      }
+      },
+      ...mapMutations({
+        setSinger: 'SET_SINGER'
+      }),
+      ...mapActions([
+        'insertSong'
+      ])
     },
     watch: {
-      query() {
-        this.search()
+      query(newQuery) {
+        this.search(newQuery)
       }
     },
     components: {
       Scroll,
-      Loading
-      // NoResult
+      Loading,
+      NoResult
     }
   }
 </script>
