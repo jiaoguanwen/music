@@ -1,5 +1,6 @@
 <template>
-  <scroll class="suggest" :data="result" @scrollToEnd="searchMore()" :pullup="pullup" ref="suggest">
+  <scroll class="suggest" :data="result" @scrollToEnd="searchMore" :pullup="pullup" ref="suggest"
+          :beforeScroll="beforeScroll" @beforeScroll="listScroll">
     <ul class="suggest-list">
       <li class="suggest-item" v-for="item in result" @click="selectItem(item)">
         <div class="icon">
@@ -47,7 +48,8 @@
         page: 1,
         result: [],
         pullup: true,
-        hasMore: true
+        hasMore: true,
+        beforeScroll: true
       }
     },
     methods: {
