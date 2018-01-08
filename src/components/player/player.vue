@@ -50,7 +50,9 @@
             <div class="icon i-left" :class="disableCls"><i class="icon-prev" @click="prev"></i></div>
             <div class="icon i-center" :class="disableCls"><i :class="playIcon" @click="togglePlaying"></i></div>
             <div class="icon i-right" :class="disableCls"><i class="icon-next" @click="next"></i></div>
-            <div class="icon i-right"><i class="icon-not-favorite"></i></div>
+            <div class="icon i-right">
+              <i class="icon" :class="getFavoriteIcon(currentSong)" @click="toggleFavorite(currentSong)"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -69,16 +71,17 @@
             <i :class="miniIcon" @click.stop="togglePlaying" class="icon-mini"></i>
           </progress-circle>
         </div>
-        <div class="control"><i class="icon-playlist"></i></div>
+        <div class="control" @click.stop="showPlaylist"><i class="icon-playlist"></i></div>
       </div>
     </transition>
+    <playlist ref="playlist"></playlist>
     <audio :src="currentSong.url" ref="audio" @canplay="ready" @error="error" @timeupdate="updateTime"
            @ended="end"></audio>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import {mapGetters, mapMutations} from 'vuex'
+  import {mapGetters, mapMutations, mapActions} from 'vuex'
   import animations from 'create-keyframe-animation'
   import {prefixStyle} from 'common/js/dom'
   import ProgressBar from 'base/progress-bar/progress-bar'
@@ -87,12 +90,15 @@
   import {shuffle} from 'common/js/util'
   import Lyric from 'lyric-parser'
   import Scroll from 'base/scroll/scroll'
+  import Playlist from 'components/playlist/playlist'
+  import {playerMixin} from 'common/js/mixin'
 
   const transform = prefixStyle('transform')
   const transitionDuration = prefixStyle('transitionDuration')
 
   export default {
     name: 'player',
+    mixins: [playerMixin],
     created() {
       this.touch = {}
     },
@@ -128,12 +134,12 @@
       },
       ...mapGetters([
         'fullScreen',
-        'playlist',
-        'currentSong',
+        /* 'playlist',
+        'currentSong', */
         'playing',
-        'currentIndex',
-        'mode',
-        'sequenceList'
+        'currentIndex'
+        /* 'mode',
+         'sequenceList' */
       ])
     },
     methods: {
@@ -385,13 +391,19 @@
         const y = window.innerHeight - paddingTop - width / 2 - paddingBottom
         return {x, y, scale}
       },
+      showPlaylist() {
+        this.$refs.playlist.show()
+      },
       ...mapMutations({
-        setFullScreen: 'SET_FULL_SCREEN',
-        setPlayingState: 'SET_PLAYING_STATE',
+        setFullScreen: 'SET_FULL_SCREEN'
+        /* setPlayingState: 'SET_PLAYING_STATE',
         setCurrentIndex: 'SET_CURRENT_INDEX',
         setPlayMode: 'SET_PLAY_MODE',
-        setPlaylist: 'SET_PLAYLIST'
-      })
+        setPlaylist: 'SET_PLAYLIST' */
+      }),
+      ...mapActions([
+        'savePlayHistory'
+      ])
     },
     watch: {
       currentSong(newSong, oldSong) {
@@ -416,7 +428,8 @@
     components: {
       ProgressBar,
       ProgressCircle,
-      Scroll
+      Scroll,
+      Playlist
     }
   }
 </script>
