@@ -124,7 +124,7 @@
           color $color-theme
         .item
           display flex
-          box-sizing box-sizing
+          box-sizing border-box
           align-items center
           padding 0 20px 20px 20px
           .icon

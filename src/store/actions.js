@@ -34,8 +34,11 @@ export const randomPlay = function ({commit}, {list}) {
 }
 
 export const insertSong = function ({commit, state}, song) {
+  // get the copy of playlist in case change playlist out of commit
   let playlist = state.playlist.slice()
   let sequenceList = state.sequenceList.slice()
+  // currentIndex is a value type but the two list above is reference type
+  // the value type is a new one but the reference type is a share variable, and this is the diffence between value and reference type
   let currentIndex = state.currentIndex
   // record current song
   let currentSong = playlist[currentIndex]
@@ -64,6 +67,7 @@ export const insertSong = function ({commit, state}, song) {
   if (fsIndex > -1) {
     if (currentSIndex > fsIndex) {
       sequenceList.splice(fsIndex, 1)
+      // we don`t need the index of this song in sequenceList
     } else {
       sequenceList.splice(fsIndex + 1, 1)
     }
