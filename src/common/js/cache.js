@@ -9,18 +9,24 @@ const PLAY_MAX_LEN = 200
 const FAVORITE_KEY = '__favorite__'
 const FAVORITE_MAX_LEN = 200
 
+// args: array, value, compare function, array max length
 function insertArray(arr, val, compare, maxLen) {
   const index = arr.findIndex(compare)
+  // the value is on the top of array
   if (index === 0) {
     return
   }
+  // the same value is exist, remove it
   if (index > 0) {
     arr.splice(index, 1)
   }
+  // insert the value on the top of array
   arr.unshift(val)
+  // if the length of array large than max length, remove the last value of array
   if (maxLen && arr.length > maxLen) {
     arr.pop()
   }
+  // becase array is reference type, we don`t need to return it
 }
 
 function deleteFromArray(arr, compare) {
