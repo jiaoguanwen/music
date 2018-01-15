@@ -72,10 +72,12 @@
         this.insertSong(new Song(song))
       },
       random() {
+        // const应该是一个不会更改的值，所以不用const，用let
         let list = this.currentIndex === 0 ? this.favoriteList : this.playHistory
         if (list.length === 0) {
           return
         }
+        // map返回一个新数组，而foreach修改原数组，map较快
         list = list.map((song) => {
           return new Song(song)
         })
