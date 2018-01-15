@@ -59,8 +59,7 @@
     },
     data() {
       return {
-        hotKey: [],
-        query: ''
+        hotKey: []
       }
     },
     methods: {
@@ -76,9 +75,6 @@
         this.$refs.shortcutWrapper.style.bottom = bottom
         this.$refs.shortcut.refresh()
       },
-      /* onQueryChange(query) {
-        this.query = query
-      }, */
       _getHotKey() {
         getHotKey().then((res) => {
           if (ERR_OK === res.code) {
@@ -86,9 +82,6 @@
           }
         })
       },
-      /* addQuery(query) {
-        this.$refs.searchBox.setQuery(query)
-      }, */
       ...mapActions([
         'clearSearchHistory'
       ])

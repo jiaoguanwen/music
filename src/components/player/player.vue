@@ -87,7 +87,6 @@
   import ProgressBar from 'base/progress-bar/progress-bar'
   import ProgressCircle from 'base/progress-circle/progress-circle'
   import {playMode} from 'common/js/config'
-  import {shuffle} from 'common/js/util'
   import Lyric from 'lyric-parser'
   import Scroll from 'base/scroll/scroll'
   import Playlist from 'components/playlist/playlist'
@@ -123,9 +122,6 @@
       miniIcon() {
         return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
       },
-      iconMode() {
-        return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
-      },
       disableCls() {
         return this.songReady ? '' : 'disable'
       },
@@ -134,12 +130,8 @@
       },
       ...mapGetters([
         'fullScreen',
-        /* 'playlist',
-        'currentSong', */
         'playing',
         'currentIndex'
-        /* 'mode',
-         'sequenceList' */
       ])
     },
     methods: {
@@ -227,24 +219,6 @@
         if (this.currentLyric) {
           this.currentLyric.seek(currentTime * 1000)
         }
-      },
-      changeMode() {
-        const mode = (this.mode + 1) % 3
-        this.setPlayMode(mode)
-        let list = []
-        if (playMode.random === mode) {
-          list = shuffle(this.sequenceList)
-        } else {
-          list = this.sequenceList
-        }
-        this._resetCurrentIndex(list)
-        this.setPlaylist(list)
-      },
-      _resetCurrentIndex(list) {
-        let index = list.findIndex((item) => {
-          return item.id === this.currentSong.id
-        })
-        this.setCurrentIndex(index)
       },
       getLyric() {
         this.currentSong.getLyric().then((lyric) => {
@@ -397,10 +371,6 @@
       },
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCREEN'
-        /* setPlayingState: 'SET_PLAYING_STATE',
-        setCurrentIndex: 'SET_CURRENT_INDEX',
-        setPlayMode: 'SET_PLAY_MODE',
-        setPlaylist: 'SET_PLAYLIST' */
       }),
       ...mapActions([
         'savePlayHistory'

@@ -1,5 +1,6 @@
 <template>
   <transition name="confirm-fade">
+    <!-- 阻止本组件事件冒泡，不影响外部点击事件 -->
     <div class="confirm" v-show="showFlag" @click.stop>
       <div class="confirm-wrapper">
         <div class="confirm-content">
