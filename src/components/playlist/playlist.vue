@@ -11,7 +11,7 @@
         </div>
         <scroll class="list-content" ref="listContent" :data="sequenceList" :refreshDelay="refreshDelay">
           <transition-group ref="list" name="list" tag="ul">
-            <li class="item" v-for="(item, index) in sequenceList" :key="item.id" @click="seleteItem(item, index)">
+            <li class="item" v-for="(item, index) in sequenceList" :key="item.id" @click="selectItem(item, index)">
               <i class="current" :class="getCurrentIcon(item)"></i>
               <span class="text">{{item.name}}</span>
               <span @click.stop="toggleFavorite(item)" class="like"><i :class="getFavoriteIcon(item)"></i></span>

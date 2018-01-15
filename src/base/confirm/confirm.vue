@@ -16,6 +16,7 @@
 
 <script type="text/ecmascript-6">
   export default {
+    // 一个基础组件，应该只有props, data, methods, event
     name: 'confirm',
     props: {
       text: {

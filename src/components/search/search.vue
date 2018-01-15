@@ -52,6 +52,7 @@
     },
     mixins: [playlistMixin, searchMixin],
     computed: {
+      // scroll包裹多个异步数据时
       shortcut() {
         return this.hotKey.concat(this.searchHistory)
       }

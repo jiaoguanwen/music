@@ -52,6 +52,7 @@ export const searchMixin = {
       this.saveSearchHistory(this.query)
     },
     ...mapActions([
+      // 这里的action方法会挂载在实例上，可以直接调用
       'saveSearchHistory',
       'deleteSearchHistory'
     ])
