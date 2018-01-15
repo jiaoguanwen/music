@@ -1,6 +1,7 @@
 <template>
   <transition name="list-fade">
     <div class="playlist" @click="hide" v-show="showFlag">
+      <!-- 阻止子元素事件冒泡到这里 -->
       <div class="list-wrapper" @click.stop>
         <div class="list-header">
           <h1 class="title">
@@ -148,7 +149,6 @@
       opacity 0
       .list-wrapper
         transform translate3d(0, 100%, 0)
-    &.list-fade-enter
     .list-wrapper
       position absolute
       left 0
@@ -184,7 +184,7 @@
           padding 0 30px 0 20px
           overflow hidden
           &.list-enter-active, &.list-leave-active
-            transition all .1s
+            transition all .1s linear
           &.list-enter, &.list-leave-to
             height 0
           .current
