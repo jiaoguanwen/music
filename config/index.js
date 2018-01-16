@@ -52,6 +52,8 @@ module.exports = {
     // Template for index.html
     index: path.resolve(__dirname, '../dist/index.html'),
 
+    port: 9000, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
